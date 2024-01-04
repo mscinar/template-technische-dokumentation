@@ -1,0 +1,12 @@
+== Tests
+
+In diesem Abschnitt wird beschrieben, welche Tests ausgeführt werden müssen, um die Lauffähigkeit des Gesamtsystems zu überprüfen bzw.
+im Fehlerfall die fehlerhafte Komponente einfacher identifizieren zu können.
+Auch können Schnittstellen zur Überwachung des Systems definiert werden.
+
+=== Unit-Tests
+
+
+=== Funktionstests
+
+

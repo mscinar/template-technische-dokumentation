@@ -1,0 +1,9 @@
+== Dokumenthistorie
+
+|===
+|Autor|Datum|Bemerkung
+
+|Ada Lovelace |01.10.23 |Erstellung
+|Blaise Pascal |10.10.23 |Erweiterung
+
+|===

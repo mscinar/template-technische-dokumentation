@@ -1,0 +1,7 @@
+= Api Documentation
+
+Dies ist der Platzhalter und wird beim Build mit den richtigen Daten überschrieben.
+
+[[_overview]]
+== Übersicht
+Api Documentation

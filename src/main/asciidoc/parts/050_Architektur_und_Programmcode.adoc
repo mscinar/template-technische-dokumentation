@@ -1,0 +1,51 @@
+== Architektur und Programmcode
+
+Dieser Abschnitt enthält die Lösungsdetails, also die Erklärung, wie die Komponenten und Entwurfsmuster in Programmcode
+umgesetzt wurden. Der Programmcode sollte nur in wichtigen Abschnitten zitiert werden und ansonsten für eventuelle
+Weiterentwicklungen und Code Reviews vollständig in elektronischer Form vorliegen.
+
+Außerdem sollte der Programmcode Dokumentationskommentare (Javadoc, Perldoc, phpDocumentor) enthalten,
+die eine vollständige Codedokumentation erzeugen.
+
+[plantuml,"klassen-diagramm",png, title="Beispiel Klassendiagramm"]
+----
+@startuml
+class Car
+
+Driver - Car : drives >
+Car *- Wheel : have 4 >
+Car -- Person : < owns
+
+@enduml
+----
+
+=== Module
+
+Das Projekt ist in folgende Code-Module aufgeteilt.
+
+
+==== MYAPP-import
+
+Enthält alle Klassen, die notwendig sind, um die XYZinformationen aus FREMDSYSTEM1 über den WS Endpunkt abzurufen. Insbesondere
+einen Webclient sowie eine Serviceklasse zum Kapseln der Abrufe.
+
+
+==== MYAPP-persistence
+
+Enthält alle Klassen, die notwendig sind, um die Daten in einer SOLR-Datenbank zu speichern.
+
+
+
+=== Systemlandschaft
+
+Beschreibung der Systemlandschaft, evtl. als Grafik einfügen.
+
+[plantuml,"komponenten-diagramm",png, title="Beispiel Komponentendiagramm"]
+----
+@startuml
+
+DataAccess - [First Component]
+[First Component] ..> HTTP : use
+
+@enduml
+----

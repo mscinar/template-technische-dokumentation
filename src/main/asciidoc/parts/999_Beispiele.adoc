@@ -1,0 +1,132 @@
+== Beispiele
+
+=== Verweise
+
+Hier findet man die Doku: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[asciidoc-syntax-quick-reference]
+
+Fußnote! footnote:[https://yaml.org] ich bin mir aber nicht sicher wo die note dann landet.
+
+
+=== Tabelle
+
+|===
+|Header 1 |Header 2
+
+|Column 1, row 1 |Column 2, row 1
+|Column 1, row 2 |Column 2, row 2
+|===
+
+
+
+=== Bilder
+
+.Bild mit einem Marker um zu verweisen
+image::../images/mylogo.png[logo_marker]
+
+Und hier der Verweis: <<logo_marker>>
+
+=== Sourcecode Einbinden
+
+So weist man Sourcecode aus:
+
+.Im YAML Format
+[source,yml]
+----
+spring:
+    cache:
+        jcache:
+            config: classpath:ehcache.xml
+----
+
+<1> Verweis
+
+.Als XML
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.ehcache.org/v3">
+    <cache alias="myapp.cacheregion1">
+        <expiry>
+            <ttl unit="seconds">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="MB">50</heap>
+        </resources>
+    </cache>
+</config>
+----
+
+<1> Und sogar mit Verweis
+
+.Oder Bash
+[source,bash,linenums]
+----
+#!/bin/bash
+
+# start/stop Command einlesen
+COMMAND=$1
+SCRIPT_DIR="${0%/*}" // <1>
+
+JAR="BLA.jar"
+
+# Validieren ob alle benötigten Dateien gefunden und ein Command übergeben wurde
+if [ ! -f "$JAR" ]; then
+	echo "Die jar '$JAR' wurde nicht gefunden!"
+	exit 1
+fi
+----
+
+<1> Verweis
+
+
+.Es geht auch als Include!
+[source,xml]
+----
+include::../../assembly/doku.xml[]
+----
+
+Außerdem kann man auch Code in der Zeile schreiben: `echo "Die jar '$JAR' wurde nicht gefunden!"`.
+ermittelt `SCHEDULES FROM/TO`.
+
+
+=== Plantuml
+
+Siehe http://plantuml.com/de/
+
+[plantuml,"some-diagramm",png, title="Ein Aktivitätsdiagramm"]
+----
+@startuml
+(*) --> if "Some Test" then
+
+  -->[true] "activity 1"
+
+  if "" then
+    -> "activity 3" as a3
+  else
+    if "Other test" then
+      -left-> "activity 5"
+    else
+      --> "activity 6"
+    endif
+  endif
+
+else
+
+  ->[false] "activity 2"
+
+endif
+
+a3 --> if "last test" then
+  --> "activity 7"
+else
+  -> "activity 8"
+endif
+@enduml
+----
+
+=== Konstanten
+
+:konstante: konstanter Wert
+
+Mein {konstante}.
+

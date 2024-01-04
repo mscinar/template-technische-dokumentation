@@ -1,0 +1,148 @@
+== Konfiguration
+
+Nachdem das System installiert ist, sind evtl. noch weitere Konfigurationsschritte notwendig,
+um es an die Benutzung anzupassen. Logging, Rechnerumgebung, Benutzeraccounts, Verzeichnisse etc.
+müssen erstellt und/oder dem Programm bekannt gemacht werden.
+
+*Im folgenden Beispiele für Konfigurationsdateien einer Spring-Boot Anwendung.*
+
+
+=== application.yml
+
+Die Konfiguration des Webservice findet in der `/WEB-INF/classes/application.yml` statt. Die Datei hat das YAML-Format.footnote:[https://yaml.org/]
+Dies ist ein hierarchisch strukturiertes Format für serialisierte Daten, vergleichbar JSON, XML oder den Java-Properties.
+Hier ist jedoch die Einrückung der Zeilen von bedeutender Wichtigkeit.
+Bei YAML dienen Tab-Einrückungen zur Verdeutlichung von Hierarchien. Die Einstellung
+
+[source,yml]
+----
+camel:
+   springboot:
+       jmx-enabled: false
+----
+
+wird später aufgelöst zu einem Java-Property-Pendant `camel.springboot.jmx-enabled=false`.
+
+Die Konfiguration auf einem bestimmten System kann auf verschiedene
+Arten überschrieben werden.footnote:[https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html]
+Die einfachste Variante ist es, eine `application.yml` in der ausgepackten WAR zu überschreiben.
+
+Beispiel der Application-XML für Tests auf dem Entwicklerrechner:
+
+[source,yml]
+----
+spring:
+    cache:
+        jcache:
+            config: classpath:ehcache.xml
+MYAPP:
+    solr:
+       host: http://localhost:8983/solr/
+       username: solr
+       password: solr
+    config:
+       max: 111
+       min: 1
+----
+
+[.landscape]
+<<<
+
+==== MYAPP SOLR-Konfiguration
+
+|===
+|Schlüssel |Typ |Beispielwert |Bedeutung
+
+|MYAPP:solr:host
+|Pflichtfeld, beliebig
+|`http://localhost:8983/solr/`
+|URL der SOLR-Datenbank
+
+|MYAPP:solr:username
+|Pflichtfeld, beliebig
+|solruser
+|Benutzername SOLR
+
+|MYAPP:solr:password
+|Pflichtfeld, beliebig
+|solrpassword
+|Passwort SOLR-Benutzer
+|===
+
+
+==== MYAPP Webservice Konfiguration
+
+|===
+|Schlüssel |Typ |Beispielwert |Bedeutung
+
+|MYAPP:config:max
+|Positive Ganzzahl
+|111
+|Maximale Anzahl für XYZ
+
+|MYAPP:config:min
+|Positive Ganzzahl
+|1
+|Minimale Anzahl für OPQ
+
+|spring:cache:jcache:config
+|Pfadangabe
+|`classpath:ehcache.xml`
+|Ort der Cache-Konfiguration.
+|===
+
+[.portrait]
+<<<
+
+
+=== ehcache.xml
+
+`ehcache.xml` ist die Konfigurationsdatei des Caching-Frameworks Ehcache.footnote:[https://www.ehcache.org/documentation/]
+Hier können die Cache-Arten, der Speicherplatz und weitere Ressourcen sowie die Dauer der Cacheaufbewahrung konfiguriert werden.
+
+Die MYAPP verwendet zwei Caches, um die generierten Daten für einen (kurzen) Zeitraum im Cache zu halten.
+`myapp.cacheregion1` cacht hierbei die Abfragen an den Endpunkt "ABC" und
+`myapp.cacheregion2` cacht die Abfragen an den Endpunkt "XYZ".
+Die Anfragen an den Endpunkt "search" werden nicht gecacht.
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.ehcache.org/v3">
+    <cache alias="myapp.cacheregion1">
+        <expiry>
+            <ttl unit="seconds">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="MB">50</heap>
+        </resources>
+    </cache>
+    <cache alias="myapp.cacheregion2">
+        <expiry>
+            <ttl unit="seconds">10</ttl>
+        </expiry>
+        <resources>
+            <heap unit="MB">50</heap>
+        </resources>
+    </cache>
+</config>
+----
+
+<<<
+=== log4j2.xml
+
+`/WEB-INF/classes/log4j2.xml` ist die Konfiguration des Frameworks log4j2footnote:[https://logging.apache.org/log4j/2.x/], welches das Logging der Anwendung übernimmt.
+Hier lassen sich Einstellungen des Logverhaltens der Anwendung vornehmen.
+
+[source,xml]
+----
+include::../../resources/log4j2.xml[]
+----
+
+Für den Betrieb auf verschiedenen Systemen kann eine eigene Konfiguration ausserhalb der _Fatjar_
+verwendet werden.footnote:[https://stackoverflow.com/questions/28349309/how-can-i-change-the-default-location-of-log4j2-xml-in-java-spring-boot]
+
+Hierzu muss beim Starten der Anwendung der Parameter `-Dlogging.config='/path/to/log4j2.xml'` verwendet werden.
+
+Hieraus ergibt sich dann ein Aufruf der Form `java -Dlogging.config='/path/to/log4j2.xml' -jar {application-exe-name}.jar`.
+

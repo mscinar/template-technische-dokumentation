@@ -1,0 +1,2 @@
+In diesem Ordner werden Dateien gesammelt, die als Grundlage für z. B. Grafiken, Diagramme oder Auswertungen dienen.
+Hier können also Excelsheets, Office-Dokumente, Grafikdateien, Drawio, Powerpoint, UML-Quelldateien etc. gesammelt und Versioniert werden.

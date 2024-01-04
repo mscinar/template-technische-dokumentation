@@ -1,0 +1,6 @@
+== Ziel und Zweck
+
+In diesem Abschnitt sollte die Motivation für das beschriebene Projekt deutlich werden:
+Welchen Vorteil bringt der Einsatz der neuen Software, bzw. aus welchem Grund wurde die
+Implementierung notwendig? Das Lesen dieses Kapitels sollte klären, welches Problem die beschriebene
+Software löst.

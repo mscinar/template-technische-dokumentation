@@ -1,0 +1,20 @@
+== Referenzen
+[bibliography]
+
+Beispiel der Verwendung:
+
+_The Pragmatic Programmer_ <<pp>> should be a required reading for all developers.
+To learn all about design patterns, refer to the book by the "`Gang of Four`" <<gof>>.
+
+Siehe _Ticket <<132731>>_
+
+Siehe _Dokumentation_ <<dokux>>
+
+* [[[pp]]] Andy Hunt & Dave Thomas. The Pragmatic Programmer:
+From Journeyman to Master. Addison-Wesley. 1999.
+* [[[132731]]] https://ticket.mycompany.com/projects/myproject/132731[Ticket #132731]
+* [[[dokux]]] Dokumentation
+
+Verwendete Dokumente, Tickets, Literatur, Links
+
+

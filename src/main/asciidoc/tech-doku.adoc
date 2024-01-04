@@ -1,0 +1,36 @@
+:lang: de
+include::theme/locale/attributes-de.adoc[]
+= Technische-Dokumentation: {application-name}
+:application-name: Meine Anwendung
+:application-exe-name: meinprojekt
+
+include::parts/010_Dokumenthistorie.adoc[]
+
+include::parts/020_Ziel_und_Zweck.adoc[]
+
+include::parts/030_Ueberblick.adoc[]
+
+include::parts/040_Loesungskonzept.adoc[]
+
+include::parts/050_Architektur_und_Programmcode.adoc[]
+
+include::parts/060_Ressourcen.adoc[]
+
+include::parts/070_Installation.adoc[]
+
+include::parts/080_Konfiguration.adoc[]
+
+include::parts/090_Tests.adoc[]
+
+// Swagger Doku nur einbinden, wenn die entsprechende Property (skipSwaggerAdocGeneration) in der pom.xml gesetzt ist
+ifeval::["{skip-swagger-adoc-generation}" == "var:false"]
+include::parts/095_Swagger.adoc[]
+endif::[]
+
+include::parts/100_Anhang.adoc[]
+
+include::parts/105_Referenzen.adoc[]
+
+include::parts/110_Glossar.adoc[]
+
+include::parts/999_Beispiele.adoc[]

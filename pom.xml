@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.myproject</groupId>
+    <artifactId>template-technische-dokumentation</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Template technische Dokumentation</name>
+    <description>Generiert beim Build eine technische Dokumentation als PDF und HTML</description>
+
+    <pluginRepositories>
+        <!--
+            werden für dependencies des swagger2markup-maven-plugin benötingt, insbesondere
+            ch.netzwerg:paleo-core, ch.netzwerg:paleo-core und nl.jworks.markdown_to_asciidoc:markdown_to_asciidoc
+         -->
+        <pluginRepository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jcenter-releases</id>
+            <name>jcenter</name>
+            <url>https://jcenter.bintray.com</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <repositories>
+        <!--
+            werden für dependencies des swagger2markup-maven-plugin benötingt, insbesondere
+            ch.netzwerg:paleo-core, ch.netzwerg:paleo-core und nl.jworks.markdown_to_asciidoc:markdown_to_asciidoc
+         -->
+        <repository>
+            <id>jcentral</id>
+            <name>bintray</name>
+            <url>https://jcenter.bintray.com</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <!-- Hieraus werden die Dateinamen der generierten Dokumentation erstellt, z. B. "Technische Dokumentation.pdf" -->
+        <generatedDocumentName>${project.artifactId}-Dokumentation-${project.version}</generatedDocumentName>
+
+        <!-- Wenn true, dann wird der Test Swagger2MarkupTest ausgeführt. Dieser Test kopiert die swagger.json zur weiteren Verarbeitung an die entsprechende Stelle -->
+        <skipSwaggerAdocGeneration>false</skipSwaggerAdocGeneration>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+
+        <!-- Libraries / Dependencies -->
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+        <gitflow-maven-plugin.version>1.15.1</gitflow-maven-plugin.version>
+        <buildnumber-maven-plugin.version>1.4</buildnumber-maven-plugin.version>
+        <asciidoctor-maven-plugin.version>1.5.7.1</asciidoctor-maven-plugin.version>
+        <asciidoctorj.version>1.6.2</asciidoctorj.version>
+        <asciidoctorj-diagram.version>1.5.12</asciidoctorj-diagram.version>
+        <asciidoctorj-pdf.version>1.5.0-beta.2</asciidoctorj-pdf.version>
+
+        <!-- Swagger2Markup transformiert die Swagger.json in asciidoc Dokumentation -->
+        <swagger2markup.plugin.version>1.3.7</swagger2markup.plugin.version>
+        <swagger2markup.extension.version>1.3.3</swagger2markup.extension.version>
+        <swagger2markup.version>1.3.3</swagger2markup.version>
+        <swagger2markup.generated-swagger-adoc-path>${project.build.directory}/swagger_adoc</swagger2markup.generated-swagger-adoc-path>
+        <swagger2markup.swagger-json-path>${project.basedir}/src/main/resources/</swagger2markup.swagger-json-path>
+        <swagger2markup.swagger-json-file>petstore-swagger.v2.json</swagger2markup.swagger-json-file>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.amashchenko.maven.plugin</groupId>
+                <artifactId>gitflow-maven-plugin</artifactId>
+                <version>${gitflow-maven-plugin.version}</version>
+                <configuration>
+                    <gitFlowConfig>
+                        <productionBranch>main</productionBranch>
+                    </gitFlowConfig>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>${buildnumber-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>buildCurrentDate</id>
+                            <goals>
+                                <goal>create-timestamp</goal>
+                            </goals>
+                            <phase>generate-resources</phase>
+                            <configuration>
+                                <timestampFormat>yyyy-MM-dd HH:mm:ss</timestampFormat>
+                                <timestampPropertyName>revdate</timestampPropertyName>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.asciidoctor</groupId>
+                    <artifactId>asciidoctor-maven-plugin</artifactId>
+                    <version>${asciidoctor-maven-plugin.version}</version>
+                    <configuration>
+                        <attributes>
+                            <docinfo/>
+                            <lang>de</lang>
+                        </attributes>
+                        <requires>
+                            <require>asciidoctor-diagram</require>
+                            <require>uri</require>
+                        </requires>
+                    </configuration>
+                    <executions>
+                        <!-- PDF Format erzeugen -->
+                        <execution>
+                            <id>documentation-output-pdf</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>process-asciidoc</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDocumentName>tech-doku.adoc</sourceDocumentName>
+                                <outputFile>${project.build.directory}/generated-docs/${generatedDocumentName}.pdf
+                                </outputFile>
+                                <sourceHighlighter>coderay</sourceHighlighter>
+                                <backend>pdf</backend>
+                                <attributes>
+                                    <toc/>
+                                    <linkcss>false</linkcss>
+                                    <pdf-stylesdir>${project.basedir}/src/main/asciidoc/theme</pdf-stylesdir>
+                                    <pdf-fontsdir>${project.basedir}/src/main/asciidoc/theme/fonts</pdf-fontsdir>
+                                    <pdf-style>custom</pdf-style>
+                                    <imagesDir>${project.build.directory}/generated-docs/images</imagesDir>
+                                    <doctype>book</doctype>
+                                    <icons>font</icons>
+                                    <pagenums/>
+                                    <sectnums>true</sectnums>
+                                    <revnumber>${project.version}</revnumber>
+                                    <revdate>${revdate}</revdate>
+                                    <java_version>${maven.compiler.target}</java_version>
+                                    <!-- weitere variablen können übergeben werden -->
+                                    <idprefix/>
+                                    <idseparator>-</idseparator>
+                                    <autofit-option>true</autofit-option>
+                                    <generated-swagger-adoc-path>${swagger2markup.generated-swagger-adoc-path}</generated-swagger-adoc-path>
+                                    <skip-swagger-adoc-generation>var:${skipSwaggerAdocGeneration}</skip-swagger-adoc-generation>
+                                </attributes>
+                            </configuration>
+                        </execution>
+
+                        <!-- HTML Format erzeugen -->
+                        <execution>
+                            <id>documentation-output-html</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>process-asciidoc</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDocumentName>tech-doku.adoc</sourceDocumentName>
+                                <outputFile>${project.build.directory}/generated-docs/${generatedDocumentName}.html
+                                </outputFile>
+                                <sourceHighlighter>coderay</sourceHighlighter>
+                                <backend>html</backend>
+                                <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+                                <attributes>
+                                    <toc/>
+                                    <linkcss>false</linkcss>
+                                </attributes>
+                            </configuration>
+                        </execution>
+
+                        <!-- DOCBOOK Format erzeugen -->
+                        <execution>
+                            <id>documentation-output-docbook</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>process-asciidoc</goal>
+                            </goals>
+                            <configuration>
+                                <sourceDocumentName>tech-doku.adoc</sourceDocumentName>
+                                <outputFile>${project.build.directory}/generated-docs/${generatedDocumentName}.xml
+                                </outputFile>
+                                <backend>docbook</backend>
+                                <doctype>book</doctype>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.asciidoctor</groupId>
+                            <artifactId>asciidoctorj-diagram</artifactId>
+                            <version>${asciidoctorj-diagram.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.asciidoctor</groupId>
+                            <artifactId>asciidoctorj-pdf</artifactId>
+                            <version>${asciidoctorj-pdf.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.asciidoctor</groupId>
+                            <artifactId>asciidoctorj</artifactId>
+                            <version>${asciidoctorj.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <!-- Gesamte Dokumentation in ein Zip packen -->
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <finalName>${generatedDocumentName}</finalName>
+                        <appendAssemblyId>false</appendAssemblyId>
+                        <descriptors>
+                            <descriptor>src/main/assembly/doku.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>doku</id>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                            <phase>package</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Die folgenden Plugins sorgen dafür, dass die swagger.json durch das Ausführen des Unittest Swagger2MarkupTest erzeugt wird -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>testCompile</id>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <systemPropertyVariables>
+                            <swagger2markup.swagger-json-path>${swagger2markup.swagger-json-path}</swagger2markup.swagger-json-path>
+                            <swagger2markup.swagger-json-file>${swagger2markup.swagger-json-file}</swagger2markup.swagger-json-file>
+                        </systemPropertyVariables>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>test</id>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Die Test-Ressourcen kopieren, auch wenn test geskipped werden sollen, damit zumindest der Platzhalter der swagger Doku erzeugt werden können -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>testResources</id>
+                            <goals>
+                                <goal>testResources</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- swagger2markup transformiert die Swagger.json zu asciidoc Dokumentation -->
+                <plugin>
+                    <groupId>io.github.swagger2markup</groupId>
+                    <artifactId>swagger2markup-maven-plugin</artifactId>
+                    <version>${swagger2markup.plugin.version}</version>
+                    <configuration>
+                        <swaggerInput>${swagger2markup.swagger-json-path}/${swagger2markup.swagger-json-file}</swaggerInput>
+                        <outputDir>${swagger2markup.generated-swagger-adoc-path}</outputDir>
+                        <config>
+                            <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+                            <swagger2markup.outputLanguage>DE</swagger2markup.outputLanguage>
+                            <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
+                            <swagger2markup.generatedExamplesEnabled>true</swagger2markup.generatedExamplesEnabled>
+                        </config>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>io.github.swagger2markup</groupId>
+                            <artifactId>swagger2markup-import-files-ext</artifactId>
+                            <version>${swagger2markup.extension.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>io.github.swagger2markup</groupId>
+                            <artifactId>swagger2markup</artifactId>
+                            <version>${swagger2markup.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <phase>test</phase>
+                            <goals>
+                                <goal>convertSwagger2markup</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- linux platforms -->
+            <id>gendocLin</id>
+            <activation>
+                <file>
+                    <exists>/usr/bin/dot</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!-- windows platforms -->
+            <id>gendocWin</id>
+            <activation>
+                <file>
+                    <exists>${user.home}/graphviz/dot.exe</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-maven-plugin</artifactId>
+                        <configuration>
+                            <skip>${skipSwaggerAdocGeneration}</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

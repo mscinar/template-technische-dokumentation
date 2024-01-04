@@ -1,0 +1,27 @@
+== Swagger-GUI
+
+Standardmäßig wird die Swagger-GUI unter http://HOST/swaggr-ui.html bereitgestellt, auf allen anderen System wird dieses standardmäßig nicht bereitgestellt.
+Die aktivierung erfolgt durch die übergabe einer Spring Profiles, dies kann entweder über die Kommandozeile beim Starten der Anwendung erfolgen:
+`--spring.profiles.active=swagger` oder das Profil wird in der Konfigurationsdatei `application.yml` aktiviert:
+
+[source,yaml]
+----
+spring:
+    profiles:
+        active: swagger
+----
+
+
+// die Variable "generated-swagger-adoc-path" wird von Maven während des Builds injected in der preview soll es aber keine Fehler geben
+:swagger-adoc-path: swagger
+ifdef::generated-swagger-adoc-path[]
+:swagger-adoc-path: {generated-swagger-adoc-path}
+endif::generated-swagger-adoc-path[]
+
+// die folgenden Dokumente werden während des Builds erzeugt und eingebettet
+:leveloffset: +1
+include::{swagger-adoc-path}/overview.adoc[]
+include::{swagger-adoc-path}/paths.adoc[]
+include::{swagger-adoc-path}/security.adoc[]
+include::{swagger-adoc-path}/definitions.adoc[]
+:leveloffset: -1

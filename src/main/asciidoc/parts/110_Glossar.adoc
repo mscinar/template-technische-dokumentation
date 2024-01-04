@@ -1,0 +1,13 @@
+== Glossar
+
+Abkürzungen und Fachwörter, die im Text der Dokumentation auftauchen, müssen hier erklärt werden,
+um eine einwandfreie Verständlichkeit des Dokuments zu gewährleisten.
+
+|===
+|Stichwort|Beschreibung
+
+|Scrum
+|Scrum (aus englisch scrum für „[das] Gedränge“) ist ein Vorgehensmodell des Projekt- und
+Produktmanagements, insbesondere zur agilen Softwareentwicklung
+
+|===

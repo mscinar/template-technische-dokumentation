@@ -1,0 +1,13 @@
+skinparam class {
+  ArrowColor #8b9295
+  BackgroundColor #d7d8d8
+  BorderColor #00345e
+}
+
+!define Table(name,desc) class name as "desc" << (T,#f5f5f5) >>
+!define primary_key(x) <b>x</b>
+!define unique(x) <i>x</i>
+!define not_null(x) <u>x</u>
+
+hide methods
+hide stereotypes

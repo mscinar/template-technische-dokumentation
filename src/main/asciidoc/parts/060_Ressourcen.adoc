@@ -1,0 +1,52 @@
+== Ressourcen
+
+=== Programmiersprache /  Bibliotheken
+
+Art und Version der Programmiersprache sowie verwendete Bibliotheken
+eventuell Dokus zu speziellen Bibliotheken
+
+In den folgenden Unterkapiteln sollten weitere Ressourcen beschrieben werden:
+
+* Tomcat Instanz /Version
+* Apache
+* MySQL-Datenbank / Version
+* Webservices
+* …
+
+Beispiel:
+
+=== Verwendete JDK
+
+Die verwendete JDK ist die {java_version}.
+
+=== Verwendete Bibliotheken Laufzeit
+
+|===
+|Name |Version |Beschreibung
+
+
+|EhCache | 3.6.3 | Caching-API
+|Gson | 2.7 | Json-Parser
+|Jackson | 2.9.8 | Json-Parser
+|Jaxb | 2.3.0.1 | XML-Javabeans Mapping
+|Log4j | 2.11.1 | Logging
+|Sophora-Client | 2.5.23 | Subshell Client
+|Spring-Boot | 2.1.4.RELEASE | Spring Applikationsframework
+|Spring-Framework | 5.1.6.RELEASE | Spring Komponentenframework als Teil von Spring-Boot
+|===
+
+
+=== Verwendete Bibliotheken Entwicklung / Build
+
+|===
+|Name |Version |Beschreibung
+
+|Hamcrest | 2.1 | Assertions für Tests
+|Junit-Jupiter | 5.3.2 | Testingframework
+|Lombok | 1.18.8 | Generierung von Gettern/Settern zur Buildzeit
+|Maven | 3.6.0 | Buildwerkzeug
+|Mockito | 2.26.0 | Mocking für Tests
+|okhttp3 MockWebserver | 3.8.1 | Mockwebserver für Integrationstests
+|Spring-Boot-Starter-Test | 2.1.4.RELEASE | Testing Framework für Spring-Boot
+|===
+

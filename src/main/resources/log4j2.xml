@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="120">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{DEFAULT} MYAPP %p [%t] %c - %m%n" />
+        </Console>
+        <RollingRandomAccessFile name="File" append="true"
+                                 fileName="${log4j.file.path}MYAPP.log" filePattern="${log4j.file.path}MYAPP-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>%d{DEFAULT} %p [%t] %c - %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.hibernate" level="error" />
+        <Logger name="org.springframework" level="info" />
+        <Logger name="com.myproject" level="info" />
+        <Root level="warn">
+            <AppenderRef ref="Console" level="error" />
+            <AppenderRef ref="File" />
+        </Root>
+    </Loggers>
+</Configuration>

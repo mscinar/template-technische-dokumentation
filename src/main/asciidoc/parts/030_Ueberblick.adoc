@@ -1,0 +1,3 @@
+== Überblick
+
+Zusammenfassende Beschreibung der {application-name}-Anwendung.

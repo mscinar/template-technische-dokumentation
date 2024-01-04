@@ -1,0 +1,46 @@
+== Lösungskonzept
+
+Ausgehend vom IST-Zustand beschreibt das Lösungskonzept, wie die Anforderung umgesetzt wurde.
+Insbesondere muss hier auf die Abläufe, die Gliederung der Lösung mit ihren Komponenten
+(Teilsysteme, Aufteilung in Prozesse, Modularisierung etc.), die Kommunikation der Komponenten
+untereinander, die Verteilung auf Software und Hardware und die Verteilung der Software auf die
+vorhandenen Ressourcen eingegangen werden.
+
+Die Komponenten und ihre Interaktionen untereinander und mit externen Systemen sollten günstigerweise
+mittels UML-Diagrammen erklärt sein. Auch für das Datenbankmodell wird eine grafische Aufbereitung
+der Abhängigkeiten (E/R-Diagramm) gefordert.
+
+=== Komponenten
+
+Das Projekt ist in folgende Komponenten aufgeteilt.
+
+
+==== MYAPP-import
+
+Diese Komponente ruft die XYZ-Informationen aus FREMDSYSTEM1 über den WS Endpunkt ab und speichert diese in einer Datenbank.
+
+
+==== MYAPP-export
+
+Diese Komponente schreibt in regelmäßigen Abständen alle lokal aggregierten Daten in das FREMDSYSTEM2.
+
+
+[plantuml,"er-diagramm",png, title="Beispiel ER Diagramm"]
+----
+@startuml
+object Object01
+object Object02
+object Object03
+object Object04
+object Object05
+object Object06
+object Object07
+object Object08
+
+Object01 <|-- Object02
+Object03 *-- Object04
+Object05 o-- "4" Object06
+Object07 .. Object08 : some labels
+
+@enduml
+----

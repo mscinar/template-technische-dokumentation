@@ -1,0 +1,50 @@
+== Installation
+
+Die Installationsanleitung beschreibt die notwendigen Schritte, um auf der Zielhardware ein
+lauffähiges System zu erstellen. Hierzu zählen insbesondere auch Datenbank-Scripte für die
+Erstellung der benötigten Tabellen und Nutzereinträge.
+
+Dieses Kapitel kann auch als eigenständige Dokumentation zugeliefert werden.
+
+*Im folgenden Beispielabschnitte aus einer Anwendung*
+
+=== Voraussetzungen
+
+Für die Einrichtung des MYAPP werden Zugriffe auf die SOLR-Datenbanken und auf die Webservices ABC und XYZ benötigt.
+
+Der MYAPP SOLR existiert entweder bereits, oder der MYAPP Index muss noch eingerichtet
+werden. Der Core für die MAPP muss den Namen „myapp“ haben (lowercase, keine Leerzeichen).
+
+Als ausführbare Komponente dient die Fatjar `MYAPP-main-X.Y.Z.jar` für den Prozess,
+welcher in festen Abständen die Daten abruft und aggregiert in der SOLR speichert.
+
+
+== Verwendung
+
+*Als Bibliothek konzipierte Module*
+
+Für die Verwendung des {application-name} wird der Zugriff auf einen Sophora-Server benötigt. Diese kann wahlweise als HTTP
+oder als RMI Verbindung konfiguriert werden.
+
+Über Maven kann die JAR-Bibliothek des {application-name}s eingebunden werden:
+
+    <dependency>
+        <groupId>com.myproject</groupId>
+        <artifactId>component-core</artifactId>
+        <version>{revnumber}</version>
+    </dependency>
+
+
+
+=== Einrichten eines Entwickler Arbeitsplatzes
+
+Der Quellcode ist unter `https://git.mycompany.com/projects/MYAPP.git` zu finden.
+Es muss eine lokale SOLR-Instanz vorhanden sein. Diese kann über die SOLR-Administrationsweboberfläche wie folgt angelegt werden:
+
+ Core Admin / Add Core
+ Name: myapp
+ InstanceDir: /local/bin/solr/./
+ DataDir: /var/solr/data_myapp/
+
+Anschließend kann in der pom.xml ein eigenes Profil mit den passenden Zugangsdaten angelegt, oder der vorhandene Default verwendet werden.
+Die verschiedenen Werte werden im Abschnitt <<Konfiguration>>  genauer erläutert.
